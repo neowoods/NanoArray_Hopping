@@ -20,9 +20,9 @@ bp=0.99; %npArrayExperimental value      %/Angstrom ptcdi
 
 Vxmin=18;
 Vstep=30;
-Trials=64;
-NPgridrows=32;
-grids=32; %how many grids to generate
+Trials = 1;
+NPgridrows = 4;
+grids = 1; %how many grids to generate
 
 %% Initial Variables
 % h1 is number of hexagon rows there are
@@ -47,6 +47,7 @@ HmeGG = zeros(grids,5);
 SmeGGStd = zeros(grids,5);
 HmeGGStd = zeros(grids,5);
 Matrix_O = zeros(xm1+1, ymax+1, grids,5);
+Matrix_Oex = zeros(xm1+1, ymax+1, grids,5);
 Ea_alk=0.017;
 Ea_ptc=0.0266;
 Vx = 0.41
@@ -164,50 +165,53 @@ dlmwrite(strcat(path,filename,savetime,'.txt'), output.Ea_ptc,'-append','delimit
 
 
 
-%% Matrix data output
+%% Matrix data output&save
 output = struct('Matrix_C', Matrix_C, 'Matrix_Cex', Matrix_Cex);
-path = 'C:\Simulation\NPHopSim_Randl_ JIAWEI_Matrix\Randl\PR';
+path = 'C:\simluation\Randl_Data_Matrix';
 filename = 'RandRunLG_CM_Matrix';
 Dn=dir(path);
 Dnum=length(Dn);
-pause(0.1)
-savetime=strcat(date,'_',num2str(Dnum+1)); 
-dlmwrite(strcat(path,filename,savetime,'.txt'), 'Matrix_C','-append','delimiter',',', 'precision',10,'newline','pc');
-dlmwrite(strcat(path,filename,savetime,'.txt'), output.Matrix_C,'-append','delimiter',',', 'precision',10,'newline','pc');
-dlmwrite(strcat(path,filename,savetime,'.txt'), 'Matrix_Cex','-append','delimiter',',', 'precision',10,'newline','pc');
-dlmwrite(strcat(path,filename,savetime,'.txt'), output.Matrix_Cex,'-append','delimiter',',', 'precision',10,'newline','pc');
+for j= 1:5
+    writematrix(Matrix_C(:,:,j), strcat(num2str(Dnum),'C.xls'),'sheet',j)
+    writematrix(Matrix_Cex(:,:,j), strcat(num2str(Dnum),'C_ex.xls'), 'sheet', j)
+end
+
+save('C.xls')
 
 %% Matrix Graphics output&save
-title(strcat('Matrix without ligand exchange'));
+
 for j = 1:5
     i = num2str(j);
     s = mesh(Matrix_C(:,:,j));
     s.FaceColor = 'flat';
     colorbar
+    title(strcat('Matrix without ligand exchange   ligand #',i));
+    ylabel(['x dir #', num2str(xm1+1)]);
+    xlabel(['y dir #', num2str(ymax+1)]);
     fig = gca;
+    
     saveas(fig,strcat(path,'Matrix_C_',i,savetime,'fig'));
 end
 
-
-pause(0.1)
-toc
-
-
-title(strcat('Matrix with ligand exchange'));
 for j = 1:5
     i = num2str(j);
     s = mesh(Matrix_Cex(:,:,j));
     s.FaceColor = 'flat';
     colorbar
+    title(strcat('Matrix with ligand exchange    ligand #',i));
+    ylabel(['x dir #', num2str(xm1+1)]);
+    xlabel(['y dir #', num2str(ymax+1)]);
     fig = gca;
+    
     saveas(fig,strcat(path,'Matrix_Cex_',i,savetime, 'fig'));
+    
 end
 
 
 pause(0.1)
 toc
 
-%% LigandEx graphics output&save
+%% LigandEx Graphics output&save
 colorz=[0,0,0];
     for k=1:grids
         multiplier=0.99/grids;
@@ -235,21 +239,26 @@ xlabel 'Mean Length Angstroms'
 ylabel 'Normalized Successful Hops'
 legend('HNGG, darker = smaller Vx');
 set (gca, 'yscale','log')
+
 subplot(1,4,2)
 xlabel 'Mean Length Angstroms'
 ylabel 'Normalized Successful Hops'
 legend('HNG, darker = smaller Vx');
 set (gca, 'yscale','log')
+
 subplot(1,4,3)
 semilogy(LM,CNG)
 xlabel('Mean Length Angstroms');
 ylabel('CNG - PTCDI/Alkane');
+
 subplot(1,4,4)
 errorbar(LM, mean(CNG), std(CNG)/sqrt(length(CNG)));
 xlabel('Mean Length Angstroms');
 ylabel('CNG - PTCDI/Alkane');
 
-saveas(gca,strcat(path,mfilename,savetime,'.fig'), 'fig');
+figure = gca;
+saveas(figure, strcat(path,mfilename,savetime,'.fig'), 'fig');
+
 pause(0.1)
 toc
 end 
