@@ -1,5 +1,6 @@
 tic
 clear all
+
 for zztop=1:1
 d = 1;
 lengthfactor=0.54;  
@@ -20,9 +21,9 @@ bp=0.99; %npArrayExperimental value      %/Angstrom ptcdi
 
 Vxmin=18;
 Vstep=30;
-Trials = 1;
+Trials = 32;
 NPgridrows = 4;
-grids = 1; %how many grids to generate
+grids = 4; %how many grids to generate
 
 %% Initial Variables
 % h1 is number of hexagon rows there are
@@ -53,7 +54,7 @@ Ea_ptc=0.0266;
 Vx = 0.41
 
 
-%% main loop
+%% Main loop
 
 for ngrd=1:grids
     for j = 1:5
@@ -83,7 +84,9 @@ HNG = HmeG./SmeG;
 CNG = HNGG./HNG;
 CNGs = std(HNGG./HNG);
 
-%% graphic matrix
+timelapse = toc
+
+%% Photocurrent matrix
 Matrix_Cex = zeros(xm1+1, ymax+1, 5);
 for j= 1:5
     for x = 1: (xm1+1)
@@ -101,13 +104,51 @@ for j= 1:5
         end
     end
 end
+  
+%% Photocurrent matrix data output&save
+path = 'C:\Simulation_Data\NanoArray\';
+Dn=dir(path);
+Dnum=length(Dn);
+for j= 1:5
+    writematrix(Matrix_C(:,:,j), strcat(path,'#',num2str(Dnum),'Matrix_C_','.xls'),'sheet',j)
+    writematrix(Matrix_Cex(:,:,j), strcat(path,'#',num2str(Dnum),'Matrix_Cex_','.xls'), 'sheet', j)
+end
 
-timelapse = toc
-   
-%% data output
+%% Photocurrent matrix Graphics output&save
+for j = 1:5
+    i = num2str(j);
+    s = mesh(Matrix_C(:,:,j));
+    s.FaceColor = 'flat';
+    colorbar
+    title(strcat('Matrix without ligand exchange   ligand #',i));
+    ylabel(['x dir #', num2str(xm1+1)]);
+    xlabel(['y dir #', num2str(ymax+1)]);
+    fig = gca;
+    
+    saveas(fig,strcat(path,'#',num2str(Dnum),'C_',i,'.fig'));
+end
+
+for j = 1:5
+    i = num2str(j);
+    s = mesh(Matrix_Cex(:,:,j));
+    s.FaceColor = 'flat';
+    colorbar
+    title(strcat('Matrix with ligand exchange    ligand #',i));
+    ylabel(['x dir #', num2str(xm1+1)]);
+    xlabel(['y dir #', num2str(ymax+1)]);
+    fig = gca;
+    
+    saveas(fig,strcat(path,'#',num2str(Dnum),'Cex_',i,'.fig'));
+    
+end
+
+pause(0.1)
+toc
+
+%% Data output
 output = struct('SmeGG', SmeGG,'HmeGG',HmeGG,'SmeGGStd', SmeGGStd,'HmeGGStd',HmeGGStd,'SmeG',SmeG,'HmeG',HmeG,'SmeGStd',SmeGStd,'HmeGStd',HmeGStd,'HNGG',HNGG,'HNG',HNG,'CNG',CNG,'CNGs',CNGs, 'Ea_alk', Ea_alk, 'Ea_ptc', Ea_ptc);
-path = 'C:\simluation\Randl_Data_Matrix';
-filename = 'RandRunLG_CM';
+path = 'C:\Simulation_Data\NanoArray\';
+filename = 'Randl';
 Dn=dir(path);
 Dnum=length(Dn);
 pause(0.1)
@@ -164,53 +205,6 @@ dlmwrite(strcat(path,filename,savetime,'.txt'), 'Ea_ptc','-append','delimiter','
 dlmwrite(strcat(path,filename,savetime,'.txt'), output.Ea_ptc,'-append','delimiter',',', 'precision',10,'newline','pc');
 
 
-
-%% Matrix data output&save
-output = struct('Matrix_C', Matrix_C, 'Matrix_Cex', Matrix_Cex);
-path = 'C:\simluation\Randl_Data_Matrix';
-filename = 'RandRunLG_CM_Matrix';
-Dn=dir(path);
-Dnum=length(Dn);
-for j= 1:5
-    writematrix(Matrix_C(:,:,j), strcat(num2str(Dnum),'C.xls'),'sheet',j)
-    writematrix(Matrix_Cex(:,:,j), strcat(num2str(Dnum),'C_ex.xls'), 'sheet', j)
-end
-
-save('C.xls')
-
-%% Matrix Graphics output&save
-
-for j = 1:5
-    i = num2str(j);
-    s = mesh(Matrix_C(:,:,j));
-    s.FaceColor = 'flat';
-    colorbar
-    title(strcat('Matrix without ligand exchange   ligand #',i));
-    ylabel(['x dir #', num2str(xm1+1)]);
-    xlabel(['y dir #', num2str(ymax+1)]);
-    fig = gca;
-    
-    saveas(fig,strcat(path,'Matrix_C_',i,savetime,'fig'));
-end
-
-for j = 1:5
-    i = num2str(j);
-    s = mesh(Matrix_Cex(:,:,j));
-    s.FaceColor = 'flat';
-    colorbar
-    title(strcat('Matrix with ligand exchange    ligand #',i));
-    ylabel(['x dir #', num2str(xm1+1)]);
-    xlabel(['y dir #', num2str(ymax+1)]);
-    fig = gca;
-    
-    saveas(fig,strcat(path,'Matrix_Cex_',i,savetime, 'fig'));
-    
-end
-
-
-pause(0.1)
-toc
-
 %% LigandEx Graphics output&save
 colorz=[0,0,0];
     for k=1:grids
@@ -256,11 +250,11 @@ errorbar(LM, mean(CNG), std(CNG)/sqrt(length(CNG)));
 xlabel('Mean Length Angstroms');
 ylabel('CNG - PTCDI/Alkane');
 
-figure = gca;
-saveas(figure, strcat(path,mfilename,savetime,'.fig'), 'fig');
+saveas(gca, strcat(path,'#',mfilename,num2str(Dnum),'.fig'), 'fig');
 
 pause(0.1)
 toc
+
 end 
 
 toc
