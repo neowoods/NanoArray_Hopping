@@ -106,7 +106,7 @@ timelapse = toc
    
 %% data output
 output = struct('SmeGG', SmeGG,'HmeGG',HmeGG,'SmeGGStd', SmeGGStd,'HmeGGStd',HmeGGStd,'SmeG',SmeG,'HmeG',HmeG,'SmeGStd',SmeGStd,'HmeGStd',HmeGStd,'HNGG',HNGG,'HNG',HNG,'CNG',CNG,'CNGs',CNGs, 'Ea_alk', Ea_alk, 'Ea_ptc', Ea_ptc);
-path = 'C:\Simulation\NPHopSim_Randl_ JIAWEI_Matrix\Randl\PR';
+path = 'C:\simluation\Randl_Data_Matrix';
 filename = 'RandRunLG_CM';
 Dn=dir(path);
 Dnum=length(Dn);
@@ -217,7 +217,7 @@ colorz=[0,0,0];
         multiplier=0.99/grids;
         colorz(k,:)=[0,multiplier*k,multiplier*k];
     end
-    figure
+    figure;
     hold on
     
     for m=1:grids 
