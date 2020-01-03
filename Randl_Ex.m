@@ -1,4 +1,4 @@
-function [na,Sme,Hme,L, SmeStd, HmeStd, Matrix_ave] = Randl_Ex(h1,T,lm,l2,lmin,ls,lP,b1,bP,Ea,Vx,Tr)
+function [na,Sme,Hme,L, SmeStd, HmeStd, Matrix_ave, Gex] = Randl_Ex(h1,T,lm,l2,lmin,ls,lP,b1,bP,Ea,Vx,Tr)
 %% Initial Variables
 % h1 is number of hexagon rows there are
 H = h1*3^(1/2); % H is the hieght of the grid  
@@ -12,9 +12,11 @@ xm2 = 2*(w + 1); % xm2 is the maximum x position at the shorter rows
 ym = h1*2 + 1; 
 ymax = 2*ym - 1;% ymax is the maximum y position
 yf = ymax; % yf is the final y position
-L = zeros(xm1, ymax, 2);
+L = zeros(xm1, ymax, 2);% matrix of ligand length
 M = zeros(xm1, ymax);
-Matrix_sum = zeros(xm1, ymax);
+Gex = zeros(xm1, ymax, 2);
+Matrix_sum = zeros(xm1, ymax);% Matrix_sum is the matrix to record the total traces of electron
+
 %% Generating random Length and Probabilities
 G = exp(-bP*lP);
 for i = 1:xm2
@@ -28,6 +30,8 @@ for i = 1:xm2
         else
             L(i,j,2) = exp(-b1*L(i,j,1));
         end
+        Gex(i,j,1)= PVG(T,Ea,Vx,L(i,j,2));
+        Gex(i,j,2)= NVG(T,Ea,Vx,L(i,j,2));
     end
 end
 
@@ -42,6 +46,8 @@ for i = 3:2:xm2
         else
             L(i,j,2) = exp(-b1*L(i,j,1));
         end
+        Gex(i,j,1)= NOV(T,Ea,Vx,L(i,j,2));
+        Gex(i,j,2)= NOV(T,Ea,Vx,L(i,j,2));
     end
 end
 
@@ -56,9 +62,13 @@ for i = 2:2:xm1
         else
             L(i,j,2) = exp(-b1*L(i,j,1));
         end
+        Gex(i,j,1)= NOV(T,Ea,Vx,L(i,j,2));
+        Gex(i,j,2)= NOV(T,Ea,Vx,L(i,j,2));
     end
-end     
-%% For Loop
+end
+
+
+%% Main Loop
 for t = 1:Tr % Tr is the number electron trials
     xi = 2*round(1 + w*rand); % xi is the randomized initial x position
     yi = 1; % yi is the initial y position
@@ -227,8 +237,8 @@ for t = 1:Tr % Tr is the number electron trials
         j = j1;
         s = s + 1;
     % failsafe break - to stop program from running too long    
-        if s == 1500000000000000000000
-            s = 1500000000000000000000;
+        if s == 1000000000
+            s = 1000000000;
             break
         end
     end
@@ -236,6 +246,8 @@ for t = 1:Tr % Tr is the number electron trials
     HN(t) = h;
     Matrix_sum = Matrix_sum + M;
 end
+
+%% output
 Sme = mean(S);
 Hme = mean(HN);
 Matrix_ave = Matrix_sum./Tr;

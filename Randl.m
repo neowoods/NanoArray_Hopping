@@ -1,4 +1,4 @@
-function [na,Sme,Hme,L, SmeStd, HmeStd, Matrix_ave] = Randl(h1,T,lm,ls,Ea,Vx,Tr)
+function [na,Sme,Hme,L, SmeStd, HmeStd, Matrix_ave, G] = Randl(h1,T,lm,ls,Ea,Vx,Tr)
 %% Initial Variables
 % h1 is number of hexagon rows there are
 H = h1*3^(1/2); % H is the hieght of the grid  
@@ -14,14 +14,18 @@ ymax = 2*ym - 1;
 yf = ymax; % yf is the final y position
 L = zeros(xm1,ymax);
 M = zeros(xm1, ymax);
+G = zeros(xm1, ymax, 2);
 Matrix_sum = zeros(xm1, ymax);
-%% Generating random Length and Probabilities
+
+%% Generating random Length and Conductivity Probabilities
 for i = 1:xm2
     for j = 2:2:ymax
         L(i,j) = normrnd(lm,ls);
         if(L(i,j) <= 0)
             L(i,j) = 0;
         end
+        G(i,j,1)= PV(T,L(i,j),Ea,Vx);
+        G(i,j,2)= NV(T,L(i,j),Ea,Vx);
     end
 end
 
@@ -31,6 +35,8 @@ for i = 3:2:xm2
         if(L(i,j) <= 0)
             L(i,j) = 0;
         end
+        G(i,j,1)= NOV(T,L(i,j),Ea,Vx);
+        G(i,j,2)= NOV(T,L(i,j),Ea,Vx);
     end
 end
 
@@ -40,8 +46,13 @@ for i = 2:2:xm1
         if(L(i,j) <= 0)
             L(i,j) = 0;
         end
+        G(i,j,1)= NOV(T,L(i,j),Ea,Vx);
+        G(i,j,2)= NOV(T,L(i,j),Ea,Vx);
     end
-end     
+end 
+
+
+%% Main Loop
 for t = 1:Tr % Tr is the number electron trials
     h = 0;
     s = 0; % s is total hop attempts
@@ -204,8 +215,8 @@ for t = 1:Tr % Tr is the number electron trials
         s = s + 1;
           
     % failsafe break - to stop program from running too long    
-        if s == 1.5*10^40
-            s = 1.5*10^40;
+        if s == 1000000000
+            s = 1000000000;
             break
         end
     end
@@ -213,6 +224,8 @@ for t = 1:Tr % Tr is the number electron trials
     HN(t) = h;    
     Matrix_sum = Matrix_sum + M;
 end
+
+%% OUTPUT
 Sme = mean(S);
 Hme = mean(HN);
 Matrix_ave = Matrix_sum./Tr;
