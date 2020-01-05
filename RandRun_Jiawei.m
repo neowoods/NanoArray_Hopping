@@ -21,9 +21,9 @@ bp=0.99; %npArrayExperimental value      %/Angstrom ptcdi
 
 Vxmin=18;
 Vstep=30;
-Trials = 512;
-NPgridrows = 16;
-grids = 32; %how many grids to generate
+Trials = 16;
+NPgridrows = 2;
+grids = 1; %how many grids to generate
 
 %% Initial Variables
 % h1 is number of hexagon rows there are

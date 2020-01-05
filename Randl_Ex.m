@@ -1,9 +1,9 @@
 function [na,Sme,Hme,L, SmeStd, HmeStd, Matrix_ave, Gex] = Randl_Ex(h1,T,lm,l2,lmin,ls,lP,b1,bP,Ea,Vx,Tr)
 %% Initial Variables
 % h1 is number of hexagon rows there are
-H = h1*3^(1/2); % H is the hieght of the grid  
+H = h1*3^(1/2); % H is the hieght of the grid
 W = 3*H; % W is the exact width needed to fulfill 3:1 ratio
-w = round(W); % w is the width - using one bond length as the counting measure 
+w = round(W); % w is the width - using one bond length as the counting measure
 b = w + 1; % b is the number of atoms in one of the short rows
 c = b + 1; % c is the number of atoms in one of the long rows
 na = b + (b + c)*h1; % na is the number of atoms
@@ -77,8 +77,8 @@ for t = 1:Tr % Tr is the number electron trials
     j = yi;
     h = 0;
     M(xi,1) = M(xi,1)+1;
-    %% Grid Section  
-    while (j ~= yf) 
+    %% Grid Section
+    while (j ~= yf)
         g = rand; % g is the random number
    % Corner
         if (i == 2 && j == 1)
@@ -86,22 +86,22 @@ for t = 1:Tr % Tr is the number electron trials
             G1L = PVG(T,Ea,Vx,L(i - 1,j + 1,2));
             G2R = NOVG(T,Ea,Vx,L(i + 1,j,2));
             [i1,j1] = Ad3C1PR(i,j,g,G1R,G1L,G2R);
-            
+
             if g <= G1R
-             M(i+1,j) = M(i+1,j) + 1;
+             M(i,j+1) = M(i,j+1) + 1;
             elseif  (G1R < g && g <= (G1R + G1L))
              M(i-1,j+1) = M(i-1,j+1) + 1;
             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G2R))
              M(i + 1,j) = M(i + 1,j) + 1;
             end
              M(i1,j1) = M(i1,j1)+1;
-            
+
         elseif (j == 1 && i == xm2)
             G1R = PVG(T,Ea,Vx,L(i,j + 1,2));
             G1L = PVG(T,Ea,Vx,L(i - 1,j + 1,2));
             G2L = NOVG(T,Ea,Vx,L(i - 1,j,2));
             [i1,j1] = Ad3C2PR(i,j,g,G1R,G1L,G2L);
-            
+
              if g <= G1R
               M(i,j+1) = M(i,j+1) + 1;
              elseif  (G1R < g && g <= (G1R + G1L))
@@ -110,7 +110,7 @@ for t = 1:Tr % Tr is the number electron trials
               M(i - 1,j) = M(i - 1,j) + 1;
              end
               M(i1,j1) = M(i1,j1)+1;
-            
+
     % Bottom side
         elseif j == 1
             G1R = PVG(T,Ea,Vx,L(i,j + 1,2));
@@ -118,7 +118,7 @@ for t = 1:Tr % Tr is the number electron trials
             G2R = NOVG(T,Ea,Vx,L(i + 1,j,2));
             G2L = NOVG(T,Ea,Vx,L(i - 1,j,2));
             [i1,j1] = Ad4BPR(i,j,g,G1R,G1L,G2R,G2L);
-            
+
             if g <= G1R
              M(i,j+1) = M(i,j+1) + 1;
              elseif  (G1R < g && g <= (G1R + G1L))
@@ -126,16 +126,17 @@ for t = 1:Tr % Tr is the number electron trials
              elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G2R))
              M(i + 1,j) = M(i + 1,j) + 1;
              elseif  ((G1R + G1L + G2R) < g && g <= (G1R + G1L + G2R + G2L))
-             M(i - 1,j) = M(i - 1,j) + 1;    
+             M(i - 1,j) = M(i - 1,j) + 1;
             end
               M(i1,j1) = M(i1,j1) + 1;
-            
+
     % on the sides of the longer rows
         elseif i == 1
             G1R = PVG(T,Ea,Vx,L(i,j + 1,2));
             G2R = NOVG(T,Ea,Vx,L(i + 1,j,2));
             G3R = NVG(T,Ea,Vx,L(i,j - 1,2));
             [i1,j1] = Ad3SCNPR(i,j,g,G1R,G2R,G3R);
+
             if g <= G1R
              M(i,j+1) = M(i,j+1) + 1;
              elseif  (G1R < g && g <= (G1R + G2R))
@@ -144,13 +145,13 @@ for t = 1:Tr % Tr is the number electron trials
              M(i,j - 1) = M(i,j - 1) + 1;
             end
              M(i1,j1) = M(i1,j1) + 1;
-             
+
         elseif i == xm1
              G1L = PVG(T,Ea,Vx,L(i - 1,j + 1,2));
              G2L = NOVG(T,Ea,Vx,L(i - 1,j,2));
              G3L = NVG(T,Ea,Vx,L(i - 1,j - 1,2));
              [i1,j1] = Ad3SCFPR(i,j,g,G1L,G2L,G3L);
-             
+
              if g <= G1L
              M(i - 1,j + 1) = M(i - 1,j + 1) + 1;
              elseif  (G1L < g && g <= (G1L + G2L))
@@ -159,7 +160,7 @@ for t = 1:Tr % Tr is the number electron trials
              M(i - 1,j - 1) = M(i - 1,j - 1) + 1;
             end
              M(i1,j1) = M(i1,j1) + 1;
-             
+
     % on the sides of the shorter rows
         elseif i == 2
             G1R = PVG(T,Ea,Vx,L(i,j + 1,2));
@@ -168,7 +169,7 @@ for t = 1:Tr % Tr is the number electron trials
             G3R = NVG(T,Ea,Vx,L(i,j - 1,2));
             G3L = NVG(T,Ea,Vx,L(i - 1,j - 1,2));
             [i1, j1] = Ad5SCNPR(i,j,g,G1R,G1L,G2R,G3R,G3L);
-            
+
             if g <= G1R
              M(i,j+1) = M(i,j+1) + 1;
              elseif  (G1R < g && g <= (G1R + G1L))
@@ -181,15 +182,15 @@ for t = 1:Tr % Tr is the number electron trials
              M(i - 1,j - 1) = M(i - 1,j - 1) + 1;
             end
               M(i1, j1) = M(i1, j1) + 1;
-              
-        elseif i == xm2 
+
+        elseif i == xm2
             G1R = PVG(T,Ea,Vx,L(i,j + 1,2));
             G1L = PVG(T,Ea,Vx,L(i - 1,j + 1,2));
             G2L = NOVG(T,Ea,Vx,L(i - 1,j,2));
             G3R = NVG(T,Ea,Vx,L(i,j - 1,2));
             G3L = NVG(T,Ea,Vx,L(i - 1,j - 1,2));
             [i1, j1] = Ad5SCFPR(i,j,g,G1R,G1L,G2L,G3R,G3L);
-            
+
             if g <= G1R
              M(i,j+1) = M(i,j+1) + 1;
              elseif  (G1R < g && g <= (G1R + G1L))
@@ -202,7 +203,7 @@ for t = 1:Tr % Tr is the number electron trials
              M(i - 1,j - 1) = M(i - 1,j - 1) + 1;
             end
               M(i1,j1) = M(i1,j1) + 1;
-              
+
     % Elsewhere on the grid
         else
             G1R = PVG(T,Ea,Vx,L(i,j + 1,2));
@@ -212,7 +213,7 @@ for t = 1:Tr % Tr is the number electron trials
             G3R = NVG(T,Ea,Vx,L(i,j - 1,2));
             G3L = NVG(T,Ea,Vx,L(i - 1,j - 1,2));
             [i1,j1] = Ad6PR(i,j,g,G1R,G1L,G2R,G2L,G3R,G3L);
-            
+
             if g <= G1R
              M(i,j+1) = M(i,j+1) + 1;
              elseif  (G1R < g && g <= (G1R + G1L))
@@ -224,19 +225,19 @@ for t = 1:Tr % Tr is the number electron trials
              elseif  ((G1R + G1L + G2R + G2L) < g && g <= (G1R + G1L + G2R + G2L + G3R))
              M(i,j - 1) = M(i,j - 1) + 1;
              elseif  ((G1R + G1L + G2R + G2L + G3R) < g && g <= (G1R + G1L + G2R + G2L + G3R + G3L))
-             M(i - 1,j - 1) = M(i - 1,j - 1) + 1;    
+             M(i - 1,j - 1) = M(i - 1,j - 1) + 1;
             end
               M(i1,j1) = M(i1,j1) + 1;
-              
-        end   
-    % increasing increment     
+
+        end
+    % increasing increment
         if (i1 ~= i && j1 ~= j)
-            h = h + 1;     
+            h = h + 1;
         end
         i = i1;
         j = j1;
         s = s + 1;
-    % failsafe break - to stop program from running too long    
+    % failsafe break - to stop program from running too long
         if s == 1000000000
             s = 1000000000;
             break
@@ -250,6 +251,6 @@ end
 %% output
 Sme = mean(S);
 Hme = mean(HN);
-Matrix_ave = Matrix_sum./Tr;
+Matrix_ave = Matrix_sum;
 SmeStd=std(S);
 HmeStd=std(HN);
