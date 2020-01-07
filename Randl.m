@@ -228,7 +228,7 @@ end
 %% OUTPUT
 Sme = mean(S);
 Hme = mean(HN);
-Matrix_ave = Matrix_sum./Tr;
+Matrix_ave = Matrix_sum;
 SmeStd=std(S);
 HmeStd=std(HN);
 
