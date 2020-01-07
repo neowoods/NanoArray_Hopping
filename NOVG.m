@@ -1,4 +1,4 @@
-function G = NOVG(T,Ea,Vx,L)
+function G = NOVG(T, Ea, Vx, L)
 q = 1.60217657.*10^-19;%Coulombs
 h= 6.62606957.*10^-31;%m^2kg/s
 G0 = 5.5*10^3;%2*q^2./h;

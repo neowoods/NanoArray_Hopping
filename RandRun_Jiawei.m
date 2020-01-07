@@ -74,8 +74,8 @@ for ngrd=1:grids
                      for z = 1:2
                         Matrix_OGex(x, y, z, ngrd, j) = G_Ex(x, y, z); %Conductance
                      end
-                        
-                     
+
+
                 end
          end
 
@@ -86,8 +86,8 @@ for ngrd=1:grids
                      for z = 1:2
                         Matrix_OG(x, y, z, ngrd, j) = G(x, y, z);
                      end
-                     
- 
+
+
                 end
          end
 

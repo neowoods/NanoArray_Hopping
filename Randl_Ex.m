@@ -291,7 +291,7 @@ for t = 1:Tr % Tr is the number electron trials
             [i1,j1] = Ad3C1PR(i,j,g,G1R,G1L,G2R);
 
             if g <= G1R
-             M(i+1,j) = M(i+1,j) + 1;
+             M(i,j+1) = M(i,j+1) + 1;
             elseif  (G1R < g && g <= (G1R + G1L))
              M(i-1,j+1) = M(i-1,j+1) + 1;
             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G2R))
@@ -463,4 +463,3 @@ for x = 1: xm1
         L_O(x,y) = L(x,y,1);
     end
 end
-        
