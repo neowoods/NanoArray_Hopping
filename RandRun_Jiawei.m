@@ -3,7 +3,7 @@ clear all
 
 for zztop=1:1
 d = 1;
-lengthfactor=0.54;  
+lengthfactor=0.54;
 lff = lengthfactor
 
 LM = lengthfactor*[15.3408,16.2173,20.1895,20.8322,24.5774];
@@ -21,16 +21,16 @@ bp=0.99; %npArrayExperimental value      %/Angstrom ptcdi
 
 Vxmin=18;
 Vstep=30;
-Trials = 512;
+Trials = 256;
 NPgridrows = 16;
-grids = 32; %how many grids to generate
+grids =1; %how many grids to generate
 
 %% Initial Variables
 % h1 is number of hexagon rows there are
 h1 = NPgridrows;
-H = h1*3^(1/2); % H is the hieght of the grid  
+H = h1*3^(1/2); % H is the hieght of the grid
 W = 3*H; % W is the exact width needed to fulfill 3:1 ratio
-w = round(W); % w is the width - using one bond length as the counting measure 
+w = round(W); % w is the width - using one bond length as the counting measure
 b = w + 1; % b is the number of atoms in one of the short rows
 c = b + 1; % c is the number of atoms in one of the long rows
 na = b + (b + c)*h1; % na is the number of atoms
@@ -64,38 +64,33 @@ Vx = 0.41
 
 for ngrd=1:grids
     for j = 1:5
-         [na,SmeGG(ngrd,j),HmeGG(ngrd,j), Ligand_Ex, SmeGGStd(ngrd,j), HmeGGStd(ngrd,j), Matrix_Ex, G_Ex] = Randl_Ex(NPgridrows, 298, LM(j), l2_ptcdi, lmin_ptcdi, LS(j), lp, b1, bp, Ea_ptc, Vx, Trials);
+         [na, Ligand_Ex, Ligand, SmeGG(ngrd,j),HmeGG(ngrd,j), SmeGGStd(ngrd,j), HmeGGStd(ngrd,j), Matrix_Ex, G_Ex,SmeG(ngrd,j),HmeG(ngrd,j), SmeGStd(ngrd,j), HmeGStd(ngrd,j), Matrix, G] = Randl_Ex(NPgridrows, 298, LM(j), l2_ptcdi, lmin_ptcdi, LS(j), lp, b1, bp, Ea_alk, Ea_ptc, Vx, Trials);
+
+
          for x = 1: (xm1)
                 for y = 1: (ymax)
                      Matrix_OCex(x, y, ngrd, j) = Matrix_Ex(x, y); %Current
-                     
+                     Matrix_OLex(x, y, ngrd, j) = Ligand_Ex(x, y); %Ligand Length
                      for z = 1:2
                         Matrix_OGex(x, y, z, ngrd, j) = G_Ex(x, y, z); %Conductance
                      end
+                        
                      
-                     if Ligand_Ex(x , y, 2) ~= 0
-                        Matrix_OLex(x, y, ngrd, j) = Ligand_Ex(x, y, 2); %Ligand Length
-                     end   
                 end
-         end    
-         
-         
-         
-         [na,SmeG(ngrd,j),HmeG(ngrd,j),Ligand, SmeGStd(ngrd,j), HmeGStd(ngrd,j), Matrix, G] = Randl(NPgridrows, 298, LM(j), LS(j), Ea_alk, Vx, Trials);
+         end
+
          for x = 1: (xm1)
                 for y = 1: (ymax)
                      Matrix_OC(x, y, ngrd, j) = Matrix(x, y);
-                     
+                     Matrix_OL(x, y, ngrd, j) = Ligand(x, y);
                      for z = 1:2
                         Matrix_OG(x, y, z, ngrd, j) = G(x, y, z);
                      end
                      
-                     if Ligand(x , y) ~= 0
-                        Matrix_OL(x, y, ngrd, j) = Ligand(x, y);
-                     end
+ 
                 end
          end
-         
+
     end
 end
 
@@ -113,18 +108,17 @@ Matrix_Cex = zeros(xm1, ymax, 5);
 Matrix_Lex = zeros(xm1, ymax,5);
 Matrix_C = zeros(xm1, ymax, 5);
 Matrix_L = zeros(xm1, ymax, 5);
-
 Matrix_G = zeros(xm1, ymax, 2, 5);
 Matrix_Gex = zeros(xm1, ymax, 2, 5);
 
 for j= 1:5
     for x = 1: (xm1)
         for y = 1: (ymax)
-            Matrix_Cex(x, y, j) = mean(Matrix_OCex(x, y, :, j));           
-            Matrix_C(x, y, j) = mean(Matrix_OC(x, y, :, j));            
+            Matrix_Cex(x, y, j) = mean(Matrix_OCex(x, y, :, j));
+            Matrix_C(x, y, j) = mean(Matrix_OC(x, y, :, j));
             Matrix_Lex(x, y, j) = mean(Matrix_OLex(x, y, :, j));
             Matrix_L(x, y, j) = mean(Matrix_OL(x, y, :, j));
-            
+
             for z = 1:2
                 Matrix_Gex(x, y, z, j) = mean(Matrix_OGex(x, y, z, :, j));
                 Matrix_G(x, y, z, j) = mean(Matrix_OG(x, y, z, :, j));
@@ -134,7 +128,7 @@ for j= 1:5
 end
 
 
-  
+
 %% Current Matrix Data Save
 path = 'C:\Simulation_Data\NanoArray\';
 Dn=dir(path);
@@ -150,13 +144,13 @@ for j = 1:5
     s = mesh(Matrix_C(:,:,j));
     s.FaceColor = 'flat';
     colorbar
-    
+
     title(strcat('Current ligand#',i));
     ylabel(['Y dir xm1#', num2str(xm1)]);
     xlabel(['X dir ymax#', num2str(ymax)]);
-    
+
     fig = gca;
-    
+
     saveas(fig,strcat(path,'#',num2str(Dnum),'Current_',i,'.fig'));
 end
 
@@ -165,15 +159,15 @@ for j = 1:5
     s = mesh(Matrix_Cex(:,:,j));
     s.FaceColor = 'flat';
     colorbar
-    
+
     title(strcat('Current Ex ligand#',i));
     ylabel(['Y dir xm1#', num2str(xm1)]);
     xlabel(['X dir ymax#', num2str(ymax)]);
-    
+
     fig = gca;
-    
+
     saveas(fig,strcat(path,'#',num2str(Dnum),'Current_ex_',i,'.fig'));
-    
+
 end
 
 pause(0.1)
@@ -194,30 +188,30 @@ for j = 1:5
     s = mesh(Matrix_L(:,:,j));
     s.FaceColor = 'flat';
     colorbar
-    
+
     title(strcat('Ligand length ligand#',i));
     ylabel(['Y dir xml #', num2str(xm1)]);
     xlabel(['X dir ymax #', num2str(ymax)]);
     fig = gca;
     colormap(fig,jet);
-    
+
     saveas(fig,strcat(path,'#',num2str(Dnum),'Ligand_',i,'.fig'));
 end
 
 for j = 1:5
     i = num2str(j);
     s = mesh(Matrix_Lex(:,:,j));
-    s.FaceColor = 'flat';    
+    s.FaceColor = 'flat';
     colorbar
-    
+
     title(strcat('Ligand length Ex ligand#',i));
     ylabel(['Y dir xml#', num2str(xm1)]);
     xlabel(['X dir ymax#', num2str(ymax)]);
     fig = gca;
     colormap(fig,jet);
-    
+
     saveas(fig,strcat(path,'#',num2str(Dnum),'Ligand_ex_',i,'.fig'));
-    
+
 end
 
 pause(0.1)
@@ -232,7 +226,7 @@ for z= 1:2
     for j= 1:5
         writematrix(Matrix_G(:,:,z,j), strcat(path,'#',num2str(Dnum),'Matrix_G_','with voltage_',num2str(z),'.xls'),'sheet',j)
         writematrix(Matrix_Gex(:,:,z,j), strcat(path,'#',num2str(Dnum),'Matrix_Gex_','with voltage_',num2str(z),'.xls'), 'sheet', j)
-    end    
+    end
 end
 
 %% Conductivity Matrix Graphics Output
@@ -242,13 +236,13 @@ for z = 1:2
     s = mesh(Matrix_G(:,:,z,j));
     s.FaceColor = 'flat';
     colorbar
-    
+
     title(strcat('Conductivity ligand#',i,' with voltage#',num2str(z)));
     ylabel(['Y dir xm1#', num2str(xm1)]);
     xlabel(['X dir ymax#', num2str(ymax)]);
-    
+
     fig = gca;
-    
+
     saveas(fig,strcat(path,'#',num2str(Dnum),'Conductivity_',i,'_with voltage_',num2str(z),'.fig'));
     end
 end
@@ -259,15 +253,15 @@ for z = 1:2
     s = mesh(Matrix_Gex(:,:,z,j));
     s.FaceColor = 'flat';
     colorbar
-    
+
     title(strcat('Conductivity Ex ligand#',i,' with voltage#', num2str(z)));
     ylabel(['Y dir xm1#', num2str(xm1)]);
     xlabel(['X dir ymax#', num2str(ymax)]);
-    
+
     fig = gca;
-    
+
     saveas(fig,strcat(path,'#',num2str(Dnum),'Conductivity_Ex_',i,'_with voltage_',num2str(z),'.fig'));
-    
+
     end
 end
 pause(0.1)
@@ -280,7 +274,7 @@ filename = 'Randl';
 Dn=dir(path);
 Dnum=length(Dn);
 pause(0.1)
-savetime=strcat(date,'_',num2str(Dnum+1)); 
+savetime=strcat(date,'_',num2str(Dnum+1));
 dlmwrite(strcat(path,filename,savetime,'.txt'), 'Vx','-append','delimiter',',', 'precision',10,'newline','pc');
 dlmwrite(strcat(path,filename,savetime,'.txt'), Vx,'-append','delimiter',',', 'precision',10,'newline','pc');
 dlmwrite(strcat(path,filename,savetime,'.txt'), 'timelapse','-append','delimiter',',', 'precision',10,'newline','pc');
@@ -341,17 +335,17 @@ colorz=[0,0,0];
     end
     figure;
     hold on
-    
-    for m=1:grids 
-    
+
+    for m=1:grids
+
         subplot(1,4,1)
         hold on
         semilogy(LM(1:5),HNGG(m,:),'-o', 'Color',colorz(m,:))
-    
+
         subplot(1,4,2)
         hold on
         semilogy(LM(1:5),HNG(m,:),'-o', 'Color',colorz(m,:))
-        
+
     end
     pause(0.1)
 
@@ -383,6 +377,6 @@ saveas(gca, strcat(path,'#',num2str(Dnum),mfilename,'.fig'), 'fig');
 pause(0.1)
 toc
 
-end 
+end
 
 toc
