@@ -28,55 +28,69 @@ Matrix_sum_ex = zeros(xm1, ymax);
 G_Value = exp(-bP*lP);
 for i = 1:xm2
     for j = 2:2:ymax
-        L(i,j,1) = normrnd(lm,ls);
-        if(L(i,j,1) <= 0)
-            L(i,j,1) = 0;
+        L(i, j, 1) = normrnd(lm, ls);
+        if(L(i, j, 1) <= 0)
+            L(i, j, 2) = 0;
+            L(i, j, 1) = 0;
         end
-        if (L(i,j,1) <= l2 && L(i,j,1) >= lmin)
-            L(i,j,2) = G_Value;
+        if (L(i, j, 1) <= l2 && L(i, j, 1) >= lmin)
+            L(i, j, 2) = G_Value;
+            G_ex(i, j, 1)= PVG(T, Ea_ptc, Vx, L(i, j, 2));
+            G_ex(i, j, 2)= NVG(T, Ea_ptc, Vx, L(i, j, 2));
         else
-            L(i,j,2) = exp(-b1*L(i,j,1));
+            L(i, j, 2) = exp(-b1*L(i, j, 1));
+            G_ex(i, j, 1)= PVG(T, Ea_alk, Vx, L(i, j, 2));
+            G_ex(i, j, 2)= NVG(T, Ea_alk, Vx, L(i, j, 2));
         end
-        G_ex(i,j,1)= PVG(T,Ea_ptc,Vx,L(i,j,2));
-        G_ex(i,j,2)= NVG(T,Ea_ptc,Vx,L(i,j,2));
-        G(i,j,1)= PV(T,L(i,j,1),Ea_alk,Vx);
-        G(i,j,2)= NV(T,L(i,j,1),Ea_alk,Vx);
+        
+        G(i, j, 1)= PV(T, L(i, j, 1), Ea_alk, Vx);
+        G(i, j, 2)= NV(T, L(i, j, 1), Ea_alk, Vx);
     end
 end
 
 for i = 3:2:xm2
     for j = 1:4:ymax
-        L(i,j,1) = normrnd(lm,ls);
-        if(L(i,j) <= 0)
-            L(i,j,1) = 0;
+        L(i, j, 1) = normrnd(lm, ls);
+        if(L(i, j, 1) <= 0)
+            L(i, j, 2) = 0;
+            L(i, j, 1) = 0;
         end
-        if (L(i,j,1) <= l2 && L(i,j,1) >= lmin)
-            L(i,j,2) = G_Value;
+        if (L(i, j, 1) <= l2 && L(i, j, 1) >= lmin)
+            L(i, j, 2) = G_Value;
+            G_ex(i, j, 1)= NOVG(T, Ea_ptc, Vx, L(i, j, 2));
+            G_ex(i, j, 2)= NOVG(T, Ea_ptc, Vx, L(i, j, 2));
         else
-            L(i,j,2) = exp(-b1*L(i,j,1));
+            L(i, j,2) = exp(-b1*L(i,j,1));
+            G_ex(i, j, 1)= NOVG(T, Ea_alk, Vx, L(i, j, 2));
+            G_ex(i, j, 2)= NOVG(T, Ea_alk, Vx, L(i, j, 2));
         end
-        G_ex(i,j,1)= NOVG(T,Ea_ptc,Vx,L(i,j,2));
-        G_ex(i,j,2)= NOVG(T,Ea_ptc,Vx,L(i,j,2));
-        G(i,j,1)= NOV(T,L(i,j,1),Ea_alk,Vx);
-        G(i,j,2)= NOV(T,L(i,j,1),Ea_alk,Vx);
+        
+        G(i, j, 1)= NOV(T, L(i, j, 1), Ea_alk, Vx);
+        G(i, j, 2)= NOV(T, L(i, j, 1), Ea_alk, Vx);
     end
 end
 
 for i = 2:2:xm1
     for j = 3:4:ymax
-        L(i,j,1) = normrnd(lm,ls);
-        if(L(i,j) <= 0)
-            L(i,j,1) = 0;
+        L(i, j, 1) = normrnd(lm, ls);
+        
+        if(L(i, j, 1) <= 0)
+            L(i, j, 1) = 0;
+            L(i, j ,2) = 0;
         end
-        if (L(i,j,1) <= l2 && L(i,j,1) >= lmin)
-            L(i,j,2) = G_Value;
+        
+        if (L(i, j, 1) <= l2 && L(i, j, 1) >= lmin)
+            L(i, j, 2) = G_Value;
+            G_ex(i, j, 1)= NOVG(T, Ea_ptc, Vx, L(i, j, 2));
+            G_ex(i, j, 2)= NOVG(T, Ea_ptc, Vx, L(i, j, 2));
         else
-            L(i,j,2) = exp(-b1*L(i,j,1));
+            L(i, j, 2) = exp(-b1*L(i, j, 1));
+            G_ex(i, j, 1)= NOVG(T, Ea_alk, Vx, L(i, j, 2));
+            G_ex(i, j, 2)= NOVG(T, Ea_alk, Vx, L(i, j, 2));
         end
-        G_ex(i,j,1)= NOVG(T,Ea_ptc,Vx,L(i,j,2));
-        G_ex(i,j,2)= NOVG(T,Ea_ptc,Vx,L(i,j,2));
-        G(i,j,1)= NOV(T,L(i,j,1),Ea_alk,Vx);
-        G(i,j,2)= NOV(T,L(i,j,1),Ea_alk,Vx);
+        
+        G(i, j, 1)= NOV(T, L(i, j, 1), Ea_alk, Vx);
+        G(i, j, 2)= NOV(T, L(i, j, 1), Ea_alk, Vx);
     end
 end
 
@@ -89,109 +103,112 @@ for t = 1:Tr % Tr is the number electron trials
     i = xi; % i and j are the position variables for x and y respectively
     j = yi;
     h = 0;
-    M_ex(xi,1) = M_ex(xi,1)+1;
+    M_ex(xi, 1) = M_ex(xi, 1) + 1;
     %% Grid Section
     while (j ~= yf)
         g = rand; % g is the random number
    % Corner
         if (i == 2 && j == 1)
-            G1R = G_ex(i,j + 1,1);
-            G1L = G_ex(i - 1,j + 1,1);
-            G2R = G_ex(i + 1,j,1);
-            [i1,j1] = Ad3C1PR(i,j,g,G1R,G1L,G2R);
+            G1R = G_ex(i, j + 1, 1);
+            G1L = G_ex(i - 1, j + 1, 1);
+            G2R = G_ex(i + 1, j, 1);
+            [i1, j1] = Ad3C1PR(i, j, g, G1R, G1L, G2R);
 
             if g <= G1R
-             M_ex(i+1,j) = M_ex(i+1,j) + 1;
+             M_ex(i, j + 1) = M_ex(i, j + 1) + 1;
             elseif  (G1R < g && g <= (G1R + G1L))
-             M_ex(i-1,j+1) = M_ex(i-1,j+1) + 1;
+             M_ex(i - 1, j + 1) = M_ex(i - 1, j + 1) + 1;
             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G2R))
-             M_ex(i + 1,j) = M_ex(i + 1,j) + 1;
+             M_ex(i + 1, j) = M_ex(i + 1, j) + 1;
             end
-             M_ex(i1,j1) = M_ex(i1,j1)+1;
+            
+             M_ex(i1, j1) = M_ex(i1, j1) + 1;
 
         elseif (j == 1 && i == xm2)
-            G1R = G_ex(i,j + 1,1);
-            G1L = G_ex(i - 1,j + 1,1);
-            G2L = G_ex(i - 1,j,1);
-            [i1,j1] = Ad3C2PR(i,j,g,G1R,G1L,G2L);
+            G1R = G_ex(i, j + 1, 1);
+            G1L = G_ex(i - 1, j + 1, 1);
+            G2L = G_ex(i - 1, j, 1);
+            [i1, j1] = Ad3C2PR(i, j, g, G1R, G1L, G2L);
 
              if g <= G1R
-              M_ex(i,j+1) = M_ex(i,j+1) + 1;
+              M_ex(i, j + 1) = M_ex(i, j + 1) + 1;
              elseif  (G1R < g && g <= (G1R + G1L))
-              M_ex(i - 1,j + 1) = M_ex(i - 1,j + 1) + 1;
+              M_ex(i - 1, j + 1) = M_ex(i - 1, j + 1) + 1;
              elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G2L))
-              M_ex(i - 1,j) = M_ex(i - 1,j) + 1;
+              M_ex(i - 1, j) = M_ex(i - 1, j) + 1;
              end
-              M_ex(i1,j1) = M_ex(i1,j1)+1;
+             
+              M_ex(i1, j1) = M_ex(i1, j1) + 1;
 
     % Bottom side
         elseif j == 1
-            G1R = G_ex(i,j + 1,1);
-            G1L = G_ex(i - 1,j + 1,1);
-            G2R = G_ex(i + 1,j,1);
-            G2L = G_ex(i - 1,j,1);
-            [i1,j1] = Ad4BPR(i,j,g,G1R,G1L,G2R,G2L);
+            G1R = G_ex(i, j + 1, 1);
+            G1L = G_ex(i - 1, j + 1, 1);
+            G2R = G_ex(i + 1, j, 1);
+            G2L = G_ex(i - 1, j, 1);
+            [i1, j1] = Ad4BPR(i, j, g, G1R, G1L, G2R, G2L);
 
             if g <= G1R
-             M_ex(i,j+1) = M_ex(i,j+1) + 1;
+             M_ex(i, j + 1) = M_ex(i, j + 1) + 1;
              elseif  (G1R < g && g <= (G1R + G1L))
-             M_ex(i - 1,j + 1) = M_ex(i - 1,j + 1) + 1;
+             M_ex(i - 1, j + 1) = M_ex(i - 1, j + 1) + 1;
              elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G2R))
-             M_ex(i + 1,j) = M_ex(i + 1,j) + 1;
+             M_ex(i + 1, j) = M_ex(i + 1, j) + 1;
              elseif  ((G1R + G1L + G2R) < g && g <= (G1R + G1L + G2R + G2L))
-             M_ex(i - 1,j) = M_ex(i - 1,j) + 1;
+             M_ex(i - 1, j) = M_ex(i - 1, j) + 1;
             end
-              M_ex(i1,j1) = M_ex(i1,j1) + 1;
+            
+             M_ex(i1, j1) = M_ex(i1, j1) + 1;
 
     % on the sides of the longer rows
         elseif i == 1
-            G1R = G_ex(i,j + 1,1);
-            G2R = G_ex(i + 1,j,1);
-            G3R = G_ex(i,j - 1,2);
-            [i1,j1] = Ad3SCNPR(i,j,g,G1R,G2R,G3R);
+            G1R = G_ex(i, j + 1, 1);
+            G2R = G_ex(i + 1, j, 1);
+            G3R = G_ex(i, j - 1, 2);
+            [i1, j1] = Ad3SCNPR(i, j, g, G1R, G2R, G3R);
             if g <= G1R
-             M_ex(i,j+1) = M_ex(i,j+1) + 1;
+             M_ex(i, j + 1) = M_ex(i, j + 1) + 1;
              elseif  (G1R < g && g <= (G1R + G2R))
-             M_ex(i + 1,j) = M_ex(i + 1,j) + 1;
+             M_ex(i + 1, j) = M_ex(i + 1, j) + 1;
              elseif  ((G1R + G2R) < g && g <= (G1R + G2R + G3R))
-             M_ex(i,j - 1) = M_ex(i,j - 1) + 1;
+             M_ex(i, j - 1) = M_ex(i, j - 1) + 1;
             end
-             M_ex(i1,j1) = M_ex(i1,j1) + 1;
+             M_ex(i1, j1) = M_ex(i1, j1) + 1;
 
         elseif i == xm1
-             G1L = G_ex(i - 1,j + 1,1);
-             G2L = G_ex(i - 1,j,1);
-             G3L = G_ex(i - 1,j - 1,2);
-             [i1,j1] = Ad3SCFPR(i,j,g,G1L,G2L,G3L);
+             G1L = G_ex(i - 1, j + 1, 1);
+             G2L = G_ex(i - 1, j, 1);
+             G3L = G_ex(i - 1, j - 1, 2);
+             [i1,j1] = Ad3SCFPR(i, j, g, G1L, G2L, G3L);
 
              if g <= G1L
              M_ex(i - 1,j + 1) = M_ex(i - 1,j + 1) + 1;
              elseif  (G1L < g && g <= (G1L + G2L))
-             M_ex(i - 1,j) = M_ex(i - 1,j) + 1;
+             M_ex(i - 1, j) = M_ex(i - 1, j) + 1;
              elseif  ((G1L + G2L) < g && g <= (G1L + G2L + G3L))
-             M_ex(i - 1,j - 1) = M_ex(i - 1,j - 1) + 1;
+             M_ex(i - 1, j - 1) = M_ex(i - 1, j - 1) + 1;
             end
-             M_ex(i1,j1) = M_ex(i1,j1) + 1;
+             M_ex(i1, j1) = M_ex(i1, j1) + 1;
 
     % on the sides of the shorter rows
         elseif i == 2
-            G1R = G_ex(i,j + 1,1);
-            G1L = G_ex(i - 1,j + 1,1);
-            G2R = G_ex(i + 1,j,1);
-            G3R = G_ex(i,j - 1,2);
-            G3L = G_ex(i - 1,j - 1,2);
-            [i1, j1] = Ad5SCNPR(i,j,g,G1R,G1L,G2R,G3R,G3L);
+            G1R = G_ex(i, j + 1, 1);
+            G1L = G_ex(i - 1, j + 1, 1);
+            G2R = G_ex(i + 1, j, 1);
+            G3R = G_ex(i, j - 1, 2);
+            G3L = G_ex(i - 1, j - 1, 2);
+            [i1, j1] = Ad5SCNPR(i, j, g, G1R, G1L, G2R, G3R, G3L);
 
             if g <= G1R
-             M_ex(i,j+1) = M_ex(i,j+1) + 1;
+             M_ex(i, j + 1) = M_ex(i, j + 1) + 1;
              elseif  (G1R < g && g <= (G1R + G1L))
-             M_ex(i - 1,j + 1) = M_ex(i - 1,j + 1) + 1;
-             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G2R))
-             M_ex(i + 1,j) = M_ex(i + 1,j) + 1;
-             elseif  ((G1R + G1L + G2R) < g && g <= (G1R + G1L + G2R + G3R))
-             M_ex(i,j - 1) = M_ex(i,j - 1) + 1;
-             elseif  ((G1R + G1L + G2R + G3R) < g && g <= (G1R + G1L + G2R + G3R + G3L))
-             M_ex(i - 1,j - 1) = M_ex(i - 1,j - 1) + 1;
+             M_ex(i - 1, j + 1) = M_ex(i - 1, j + 1) + 1;
+             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G3R))
+             M_ex(i, j - 1) = M_ex(i, j - 1) + 1;
+             elseif  ((G1R + G1L + G3R) < g && g <= (G1R + G1L + G3R + G3L))
+             M_ex(i - 1, j - 1) = M_ex(i - 1, j - 1) + 1;
+             elseif  ((G1R + G1L + G3R + G3L) < g && g <= (G1R + G1L + G3R + G3L + G2R))
+             M_ex(i + 1, j) = M_ex(i + 1, j) + 1;
             end
               M_ex(i1, j1) = M_ex(i1, j1) + 1;
 
@@ -201,45 +218,45 @@ for t = 1:Tr % Tr is the number electron trials
             G2L = G_ex(i - 1, j, 1);
             G3R = G_ex(i, j - 1, 2);
             G3L = G_ex(i - 1, j - 1, 2);
-            [i1, j1] = Ad5SCFPR(i,j,g,G1R,G1L,G2L,G3R,G3L);
+            [i1, j1] = Ad5SCFPR(i, j, g, G1R, G1L, G2L, G3R, G3L);
 
             if g <= G1R
-             M_ex(i,j+1) = M_ex(i,j+1) + 1;
+             M_ex(i, j + 1) = M_ex(i, j + 1) + 1;
              elseif  (G1R < g && g <= (G1R + G1L))
              M_ex(i - 1,j + 1) = M_ex(i - 1,j + 1) + 1;
-             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G2L))
-             M_ex(i - 1,j) = M_ex(i - 1,j) + 1;
-             elseif  ((G1R + G1L + G2L) < g && g <= (G1R + G1L + G2L + G3R))
-             M_ex(i,j - 1) = M_ex(i,j - 1) + 1;
-             elseif  ((G1R + G1L + G2L + G3R) < g && g <= (G1R + G1L + G2R + G3R + G3L))
-             M_ex(i - 1,j - 1) = M_ex(i - 1,j - 1) + 1;
+             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G3R))
+             M_ex(i, j - 1) = M_ex(i, j - 1) + 1;
+             elseif  ((G1R + G1L + G3R) < g && g <= (G1R + G1L + G3R + G3L))
+             M_ex(i - 1, j - 1) = M_ex(i - 1, j - 1) + 1;
+             elseif  ((G1R + G1L + G3R + G3L) < g && g <= (G1R + G1L + G3R + G3L + G2L))
+             M_ex(i - 1, j) = M_ex(i - 1, j) + 1;
             end
-              M_ex(i1,j1) = M_ex(i1,j1) + 1;
+              M_ex(i1, j1) = M_ex(i1, j1) + 1;
 
     % Elsewhere on the grid
         else
             G1R = G_ex(i, j + 1, 1);
-            G1L = G_ex(i - 1, j + 1,1);
-            G2R = G_ex(i + 1, j,1);
-            G2L = G_ex(i - 1, j,1);
-            G3R = G_ex(i, j - 1,2);
+            G1L = G_ex(i - 1, j + 1, 1);
+            G2R = G_ex(i + 1, j, 1);
+            G2L = G_ex(i - 1, j, 1);
+            G3R = G_ex(i, j - 1, 2);
             G3L = G_ex(i - 1, j - 1, 2);
-            [i1,j1] = Ad6PR(i,j,g,G1R,G1L,G2R,G2L,G3R,G3L);
+            [i1,j1] = Ad6PR(i, j, g, G1R, G1L, G2R, G2L, G3R, G3L);
 
             if g <= G1R
-             M_ex(i,j+1) = M_ex(i,j+1) + 1;
+             M_ex(i, j + 1) = M_ex(i, j + 1) + 1;
              elseif  (G1R < g && g <= (G1R + G1L))
-             M_ex(i - 1,j + 1) = M_ex(i - 1,j + 1) + 1;
-             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G2R))
-             M_ex(i + 1,j) = M_ex(i + 1,j) + 1;
-             elseif  ((G1R + G1L + G2R) < g && g <= (G1R + G1L + G2R + G2L))
-             M_ex(i - 1,j) = M_ex(i - 1,j) + 1;
-             elseif  ((G1R + G1L + G2R + G2L) < g && g <= (G1R + G1L + G2R + G2L + G3R))
-             M_ex(i,j - 1) = M_ex(i,j - 1) + 1;
-             elseif  ((G1R + G1L + G2R + G2L + G3R) < g && g <= (G1R + G1L + G2R + G2L + G3R + G3L))
-             M_ex(i - 1,j - 1) = M_ex(i - 1,j - 1) + 1;
+             M_ex(i - 1, j + 1) = M_ex(i - 1, j + 1) + 1;
+             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G3R))
+             M_ex(i, j - 1) = M_ex(i, j - 1) + 1;
+             elseif  ((G1R + G1L + G3R) < g && g <= (G1R + G1L + G3R + G3L))
+             M_ex(i - 1,j - 1) = M_ex(i - 1, j - 1) + 1;
+             elseif  ((G1R + G1L + G3R + G3L) < g && g <= (G1R + G1L + G3R + G3L + G2R))
+             M_ex(i + 1, j) = M_ex(i + 1, j) + 1;
+             elseif  ((G1R + G1L + G3R + G3L + G2R) < g && g <= (G1R + G1L + G3R + G3L + G2R + G2L))
+             M_ex(i - 1, j) = M_ex(i - 1, j) + 1;
             end
-              M_ex(i1,j1) = M_ex(i1,j1) + 1;
+              M_ex(i1, j1) = M_ex(i1, j1) + 1;
 
         end
     % increasing increment
@@ -277,175 +294,178 @@ for t = 1:Tr % Tr is the number electron trials
     yi = 1;
     i = xi; % i and j are the position variables for x and y respectively
     j = yi;
-    M(xi,1) = M(xi,1)+1;
+    M(xi, 1) = M(xi, 1) + 1;
 
-%% Grid Section
+    %% Grid Section
     while (j ~= yf)
         g = rand; % g is the random number
-
    % Corner
         if (i == 2 && j == 1)
             G1R = G(i, j + 1, 1);
             G1L = G(i - 1, j + 1, 1);
             G2R = G(i + 1, j, 1);
-            [i1,j1] = Ad3C1PR(i,j,g,G1R,G1L,G2R);
+            [i1, j1] = Ad3C1PR(i, j, g, G1R, G1L, G2R);
 
             if g <= G1R
-             M(i,j+1) = M(i,j+1) + 1;
+             M(i, j + 1) = M(i, j + 1) + 1;
             elseif  (G1R < g && g <= (G1R + G1L))
-             M(i-1,j+1) = M(i-1,j+1) + 1;
+             M(i - 1, j + 1) = M(i - 1, j + 1) + 1;
             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G2R))
-             M(i + 1,j) = M(i + 1,j) + 1;
+             M(i + 1, j) = M(i + 1, j) + 1;
             end
-             M(i1,j1) = M(i1,j1)+1;
+            
+             M(i1, j1) = M(i1, j1) + 1;
 
         elseif (j == 1 && i == xm2)
-            G1R = G(i,j + 1,1);
-            G1L = G(i - 1,j + 1,1);
-            G2L = G(i - 1,j,1);
-            [i1,j1] = Ad3C2PR(i,j,g,G1R,G1L,G2L);
+            G1R = G(i, j + 1, 1);
+            G1L = G(i - 1, j + 1, 1);
+            G2L = G(i - 1, j, 1);
+            [i1, j1] = Ad3C2PR(i, j, g, G1R, G1L, G2L);
+
              if g <= G1R
-              M(i,j+1) = M(i,j+1) + 1;
+              M(i, j + 1) = M(i, j + 1) + 1;
              elseif  (G1R < g && g <= (G1R + G1L))
-              M(i - 1,j + 1) = M(i - 1,j + 1) + 1;
+              M(i - 1, j + 1) = M(i - 1, j + 1) + 1;
              elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G2L))
-              M(i - 1,j) = M(i - 1,j) + 1;
+              M(i - 1, j) = M(i - 1, j) + 1;
              end
-              M(i1,j1) = M(i1,j1) + 1;
+             
+              M(i1, j1) = M(i1, j1) + 1;
 
     % Bottom side
         elseif j == 1
-            G1R = G(i,j + 1,1);
-            G1L = G(i - 1,j + 1,1);
-            G2R = G(i + 1,j,1);
-            G2L = G(i - 1,j,1);
-            [i1,j1] = Ad4BPR(i,j,g,G1R,G1L,G2R,G2L);
+            G1R = G(i, j + 1, 1);
+            G1L = G(i - 1, j + 1, 1);
+            G2R = G(i + 1, j, 1);
+            G2L = G(i - 1, j, 1);
+            [i1, j1] = Ad4BPR(i, j, g, G1R, G1L, G2R, G2L);
 
             if g <= G1R
-             M(i,j+1) = M(i,j+1) + 1;
+             M(i, j + 1) = M(i, j + 1) + 1;
              elseif  (G1R < g && g <= (G1R + G1L))
-             M(i - 1,j + 1) = M(i - 1,j + 1) + 1;
+             M(i - 1, j + 1) = M(i - 1, j + 1) + 1;
              elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G2R))
-             M(i + 1,j) = M(i + 1,j) + 1;
+             M(i + 1, j) = M(i + 1, j) + 1;
              elseif  ((G1R + G1L + G2R) < g && g <= (G1R + G1L + G2R + G2L))
-             M(i - 1,j) = M(i - 1,j) + 1;
+             M(i - 1, j) = M(i - 1, j) + 1;
             end
-              M(i1,j1) = M(i1,j1) + 1;
+            
+             M(i1, j1) = M(i1, j1) + 1;
 
     % on the sides of the longer rows
         elseif i == 1
-            G1R = G(i,j + 1,1);
-            G2R = G(i + 1,j,1);
-            G3R = G(i,j - 1,2);
-            [i1,j1] = Ad3SCNPR(i,j,g,G1R,G2R,G3R);
-
+            G1R = G(i, j + 1, 1);
+            G2R = G(i + 1, j, 1);
+            G3R = G(i, j - 1, 2);
+            [i1, j1] = Ad3SCNPR(i, j, g, G1R, G2R, G3R);
             if g <= G1R
-             M(i,j+1) = M(i,j+1) + 1;
+             M(i, j + 1) = M(i, j + 1) + 1;
              elseif  (G1R < g && g <= (G1R + G2R))
-             M(i + 1,j) = M(i + 1,j) + 1;
+             M(i + 1, j) = M(i + 1, j) + 1;
              elseif  ((G1R + G2R) < g && g <= (G1R + G2R + G3R))
-             M(i,j - 1) = M(i,j - 1) + 1;
+             M(i, j - 1) = M(i, j - 1) + 1;
             end
-             M(i1,j1) = M(i1,j1) + 1;
+             M(i1, j1) = M(i1, j1) + 1;
 
         elseif i == xm1
-             G1L = G(i - 1,j + 1,1);
-             G2L = G(i - 1,j,1);
-             G3L = G(i - 1,j - 1,2);
-            [i1,j1] = Ad3SCFPR(i,j,g,G1L,G2L,G3L);
+             G1L = G(i - 1, j + 1, 1);
+             G2L = G(i - 1, j, 1);
+             G3L = G(i - 1, j - 1, 2);
+             [i1, j1] = Ad3SCFPR(i, j, g, G1L, G2L, G3L);
 
              if g <= G1L
              M(i - 1,j + 1) = M(i - 1,j + 1) + 1;
              elseif  (G1L < g && g <= (G1L + G2L))
-             M(i - 1,j) = M(i - 1,j) + 1;
+             M(i - 1, j) = M(i - 1, j) + 1;
              elseif  ((G1L + G2L) < g && g <= (G1L + G2L + G3L))
-             M(i - 1,j - 1) = M(i - 1,j - 1) + 1;
+             M(i - 1, j - 1) = M(i - 1, j - 1) + 1;
             end
-             M(i1,j1) = M(i1,j1) + 1;
+             M(i1, j1) = M(i1, j1) + 1;
 
     % on the sides of the shorter rows
         elseif i == 2
-            G1R = G(i,j + 1,1);
-            G1L = G(i - 1,j + 1,1);
-            G2R = G(i + 1,j,1);
-            G3R = G(i,j - 1,2);
-            G3L = G(i - 1,j - 1,2);
-            [i1,j1] = Ad5SCNPR(i,j,g,G1R,G1L,G2R,G3R,G3L);
+            G1R = G(i, j + 1, 1);
+            G1L = G(i - 1, j + 1, 1);
+            G2R = G(i + 1, j, 1);
+            G3R = G(i, j - 1, 2);
+            G3L = G(i - 1, j - 1, 2);
+            [i1, j1] = Ad5SCNPR(i, j, g, G1R, G1L, G2R, G3R, G3L);
 
             if g <= G1R
-             M(i,j+1) = M(i,j+1) + 1;
+             M(i, j + 1) = M(i, j + 1) + 1;
              elseif  (G1R < g && g <= (G1R + G1L))
-             M(i - 1,j + 1) = M(i - 1,j + 1) + 1;
-             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G2R))
-             M(i + 1,j) = M(i + 1,j) + 1;
-             elseif  ((G1R + G1L + G2R) < g && g <= (G1R + G1L + G2R + G3R))
-             M(i,j - 1) = M(i,j - 1) + 1;
-             elseif  ((G1R + G1L + G2R + G3R) < g && g <= (G1R + G1L + G2R + G3R + G3L))
-             M(i - 1,j - 1) = M(i - 1,j - 1) + 1;
+             M(i - 1, j + 1) = M(i - 1, j + 1) + 1;
+             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G3R))
+             M(i, j - 1) = M(i, j - 1) + 1;
+             elseif  ((G1R + G1L + G3R) < g && g <= (G1R + G1L + G3R + G3L))
+             M(i - 1, j - 1) = M(i - 1, j - 1) + 1;
+             elseif  ((G1R + G1L + G3R + G3L) < g && g <= (G1R + G1L + G3R + G3L + G2R))
+             M(i + 1, j) = M(i + 1, j) + 1;
             end
-              M(i1,j1) = M(i1,j1) + 1;
+              M(i1, j1) = M(i1, j1) + 1;
 
         elseif i == xm2
-            G1R = G(i,j + 1, 1);
-            G1L = G(i - 1,j + 1, 1);
+            G1R = G(i, j + 1, 1);
+            G1L = G(i - 1, j + 1, 1);
             G2L = G(i - 1, j, 1);
-            G3R = G(i,j - 1, 2);
-            G3L = G(i - 1,j - 1, 2);
-            [i1,j1] = Ad5SCFPR(i,j,g,G1R,G1L,G2L,G3R,G3L);
+            G3R = G(i, j - 1, 2);
+            G3L = G(i - 1, j - 1, 2);
+            [i1, j1] = Ad5SCFPR(i, j, g, G1R, G1L, G2L, G3R, G3L);
 
             if g <= G1R
-             M(i,j+1) = M(i,j+1) + 1;
+             M(i, j + 1) = M(i, j + 1) + 1;
              elseif  (G1R < g && g <= (G1R + G1L))
              M(i - 1,j + 1) = M(i - 1,j + 1) + 1;
-             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G2L))
-             M(i - 1,j) = M(i - 1,j) + 1;
-             elseif  ((G1R + G1L + G2L) < g && g <= (G1R + G1L + G2L + G3R))
-             M(i,j - 1) = M(i,j - 1) + 1;
-             elseif  ((G1R + G1L + G2L + G3R) < g && g <= (G1R + G1L + G2L + G3R + G3L))
-             M(i - 1,j - 1) = M(i - 1,j - 1) + 1;
+             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G3R))
+             M(i, j - 1) = M(i, j - 1) + 1;
+             elseif  ((G1R + G1L + G3R) < g && g <= (G1R + G1L + G3R + G3L))
+             M(i - 1, j - 1) = M(i - 1, j - 1) + 1;
+             elseif  ((G1R + G1L + G3R + G3L) < g && g <= (G1R + G1L + G3R + G3L + G2L))
+             M(i - 1, j) = M(i - 1, j) + 1;
             end
-              M(i1,j1) = M(i1,j1)+1;
+              M(i1, j1) = M(i1, j1) + 1;
 
     % Elsewhere on the grid
         else
-            G1R = G(i,j + 1, 1);
-            G1L = G(i - 1,j + 1, 1);
-            G2R = G(i + 1,j, 1);
-            G2L = G(i - 1,j, 1);
+            G1R = G(i, j + 1, 1);
+            G1L = G(i - 1, j + 1, 1);
+            G2R = G(i + 1, j, 1);
+            G2L = G(i - 1, j, 1);
             G3R = G(i, j - 1, 2);
             G3L = G(i - 1, j - 1, 2);
-            [i1,j1] = Ad6PR(i,j,g,G1R,G1L,G2R,G2L,G3R,G3L);
+            [i1, j1] = Ad6PR(i, j, g, G1R, G1L, G2R, G2L, G3R, G3L);
 
             if g <= G1R
-             M(i,j+1) = M(i,j+1) + 1;
+             M(i, j + 1) = M(i, j + 1) + 1;
              elseif  (G1R < g && g <= (G1R + G1L))
-             M(i - 1,j + 1) = M(i - 1,j + 1) + 1;
-             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G2R))
-             M(i + 1,j) = M(i + 1,j) + 1;
-             elseif  ((G1R + G1L + G2R) < g && g <= (G1R + G1L + G2R + G2L))
-             M(i - 1,j) = M(i - 1,j) + 1;
-             elseif  ((G1R + G1L + G2R + G2L) < g && g <= (G1R + G1L + G2R + G2L + G3R))
-             M(i,j - 1) = M(i,j - 1) + 1;
-             elseif  ((G1R + G1L + G2R + G2L + G3R) < g && g <= (G1R + G1L + G2R + G2L + G3R + G3L))
-             M(i - 1,j - 1) = M(i - 1,j - 1) + 1;
+             M(i - 1, j + 1) = M(i - 1, j + 1) + 1;
+             elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G3R))
+             M(i, j - 1) = M(i, j - 1) + 1;
+             elseif  ((G1R + G1L + G3R) < g && g <= (G1R + G1L + G3R + G3L))
+             M(i - 1,j - 1) = M(i - 1, j - 1) + 1;
+             elseif  ((G1R + G1L + G3R + G3L) < g && g <= (G1R + G1L + G3R + G3L + G2R))
+             M(i + 1, j) = M(i + 1, j) + 1;
+             elseif  ((G1R + G1L + G3R + G3L + G2R) < g && g <= (G1R + G1L + G3R + G3L + G2R + G2L))
+             M(i - 1, j) = M(i - 1, j) + 1;
             end
-              M(i1,j1) = M(i1,j1)+1;
+              M(i1, j1) = M(i1, j1) + 1;
 
         end
-    % increasing increment
+        
+        % increasing increment
         if (i1 ~= i && j1 ~= j)
             h = h + 1;
         end
         i = i1;
         j = j1;
         s = s + 1;
-
     % failsafe break - to stop program from running too long
         if s == 1000000000
             s = 1000000000;
             break
         end
     end
+    
     S(t) = s;
     HN(t) = h;
     Matrix_sum = Matrix_sum + M;
@@ -457,6 +477,7 @@ Hme = mean(HN);
 C = Matrix_sum;
 SmeStd=std(S);
 HmeStd=std(HN);
+
 for x = 1: xm1
     for y = 1:ymax
         L_Ex(x,y) = L(x,y,2);

@@ -11,12 +11,12 @@ elseif  ((G1R + G1L) < g && g <= (G1R + G1L + G3R))
 elseif  ((G1R + G1L + G3R) < g && g <= (G1R + G1L + G3R + G3L))
     j = j - 2;
     i = i - 1;
-elseif  ((G1R + G1L + G3R + G3L) < g && g <= (G1R + G1L + G3R + G3L + G2L))
-    j = j;
-    i = i - 2;
-elseif ((G1R + G1L + G3R + G3L + G2L) < g && g <= (G1R + G1L + G3R + G3L + G2L + G2R))
+elseif  ((G1R + G1L + G3R + G3L) < g && g <= (G1R + G1L + G3R + G3L + G2R))
     j = j;
     i = i + 2;
+elseif ((G1R + G1L + G3R + G3L + G2R) < g && g <= (G1R + G1L + G3R + G3L + G2R + G2L))
+    j = j;
+    i = i - 2;
 else
     j = j;
     i = i;
