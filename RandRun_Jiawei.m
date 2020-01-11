@@ -2,26 +2,25 @@ tic
 clear all
 
 for zztop=1:1
-d = 1;
-lengthfactor=0.54;
-lff = lengthfactor
 
+lengthfactor = 0.54 
+lff = lengthfactor;
 LM = lengthfactor*[15.3408,16.2173,20.1895,20.8322,24.5774];
 LS=0.2*LM;
 LS(2)=1.2*LS(2);
 LS(3)=0.9*LS(3);
 LS(4)=0.8*LS(4);%LS =1.6568    2.1018    1.9624    1.7999    2.6544
 
-l2_ptcdi=lengthfactor*25.5;
-lmin_ptcdi=lengthfactor*17;
-lp=lengthfactor*10.1;
+l2_ptcdi = lengthfactor*25.5;
+lmin_ptcdi = lengthfactor*17;
+lp = lengthfactor*10.1;
 
-b1=1.47; %npArrayExperimental value      %/Angstrom alkane
-bp=0.99; %npArrayExperimental value      %/Angstrom ptcdi
+b_alk = 1.47; %npArrayExperimental value      %/Angstrom alkane
+b_ptc = 0.99; %npArrayExperimental value      %/Angstrom ptcdi
 
-Vxmin=18;
-Vstep=30;
-Trials = 256;
+Vxmin = 18;
+Vstep = 30;
+Trials = 128;
 NPgridrows = 16;
 grids =1; %how many grids to generate
 
@@ -64,7 +63,7 @@ Vx = 0.41
 
 for ngrd=1:grids
     for j = 1:5
-         [na, Ligand_Ex, Ligand, SmeGG(ngrd,j),HmeGG(ngrd,j), SmeGGStd(ngrd,j), HmeGGStd(ngrd,j), Matrix_Ex, G_Ex,SmeG(ngrd,j),HmeG(ngrd,j), SmeGStd(ngrd,j), HmeGStd(ngrd,j), Matrix, G] = Randl_Ex(NPgridrows, 298, LM(j), l2_ptcdi, lmin_ptcdi, LS(j), lp, b1, bp, Ea_alk, Ea_ptc, Vx, Trials);
+         [na, Ligand_Ex, Ligand, SmeGG(ngrd,j),HmeGG(ngrd,j), SmeGGStd(ngrd,j), HmeGGStd(ngrd,j), Matrix_Ex, G_Ex,SmeG(ngrd,j),HmeG(ngrd,j), SmeGStd(ngrd,j), HmeGStd(ngrd,j), Matrix, G] = Randl_Ex(NPgridrows, 298, LM(j), l2_ptcdi, lmin_ptcdi, LS(j), lp, b_alk, b_ptc, Ea_alk, Ea_ptc, Vx, Trials);
 
 
          for x = 1: (xm1)
@@ -171,7 +170,6 @@ for j = 1:5
 end
 
 pause(0.1)
-toc
 
 %% Ligand Length Matrix Data Save
 path = 'C:\Simulation_Data\NanoArray\';
@@ -215,7 +213,6 @@ for j = 1:5
 end
 
 pause(0.1)
-toc
 
 
 %% Conductivity Matrix Data Save
@@ -265,7 +262,6 @@ for z = 1:2
     end
 end
 pause(0.1)
-toc
 
 %% Data Save
 output = struct('SmeGG', SmeGG,'HmeGG',HmeGG,'SmeGGStd', SmeGGStd,'HmeGGStd',HmeGGStd,'SmeG',SmeG,'HmeG',HmeG,'SmeGStd',SmeGStd,'HmeGStd',HmeGStd,'HNGG',HNGG,'HNG',HNG,'CNG',CNG,'CNGs',CNGs, 'Ea_alk', Ea_alk, 'Ea_ptc', Ea_ptc);
@@ -375,8 +371,8 @@ ylabel('CNG - PTCDI/Alkane');
 saveas(gca, strcat(path,'#',num2str(Dnum),mfilename,'.fig'), 'fig');
 
 pause(0.1)
-toc
 
 end
+
 
 toc

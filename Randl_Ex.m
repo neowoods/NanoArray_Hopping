@@ -1,4 +1,4 @@
-function [na, L_Ex, L_O, Sme_ex, Hme_ex, SmeStd_ex, HmeStd_ex, C_ex, G_ex, Sme, Hme, SmeStd, HmeStd, C, G] = Randl_Ex(h1,T,lm,l2,lmin,ls,lP,b1,bP, Ea_alk, Ea_ptc,Vx,Tr)
+function [na, L_Ex, L_O, Sme_ex, Hme_ex, SmeStd_ex, HmeStd_ex, C_ex, G_ex, Sme, Hme, SmeStd, HmeStd, C, G] = Randl_Ex(h1, T, lm, l2, lmin, ls, l_ptc, b_alk, b_ptc, Ea_alk, Ea_ptc,Vx,Tr)
 %% Initial Variables
 % h1 is number of hexagon rows there are
 H = h1*3^(1/2); % H is the hieght of the grid
@@ -25,26 +25,26 @@ Matrix_sum = zeros(xm1, ymax); % Matrix_sum is the matrix to record the total tr
 Matrix_sum_ex = zeros(xm1, ymax);
 
 %% Generating random Length and Probabilities
-G_Value = exp(-bP*lP);
+
 for i = 1:xm2
     for j = 2:2:ymax
         L(i, j, 1) = normrnd(lm, ls);
         if(L(i, j, 1) <= 0)
-            L(i, j, 2) = 0;
-            L(i, j, 1) = 0;
+            L(i, j, 2) = 1;
+            L(i, j, 1) = 1;
         end
         if (L(i, j, 1) <= l2 && L(i, j, 1) >= lmin)
-            L(i, j, 2) = G_Value;
-            G_ex(i, j, 1)= PVG(T, Ea_ptc, Vx, L(i, j, 2));
-            G_ex(i, j, 2)= NVG(T, Ea_ptc, Vx, L(i, j, 2));
+            L(i, j, 2) = l_ptc;
+            G_ex(i, j, 1)= PVG(T, L(i, j, 2), b_ptc, Ea_ptc, Vx);
+            G_ex(i, j, 2)= NVG(T, L(i, j, 2), b_ptc, Ea_ptc, Vx);
         else
-            L(i, j, 2) = exp(-b1*L(i, j, 1));
-            G_ex(i, j, 1)= PVG(T, Ea_alk, Vx, L(i, j, 2));
-            G_ex(i, j, 2)= NVG(T, Ea_alk, Vx, L(i, j, 2));
+            L(i, j, 2) = L(i, j, 1);
+            G_ex(i, j, 1)= PVG(T, L(i, j, 2), b_alk, Ea_alk, Vx);
+            G_ex(i, j, 2)= NVG(T, L(i, j, 2), b_alk, Ea_alk, Vx);
         end
         
-        G(i, j, 1)= PV(T, L(i, j, 1), Ea_alk, Vx);
-        G(i, j, 2)= NV(T, L(i, j, 1), Ea_alk, Vx);
+        G(i, j, 1)= PV(T, L(i, j, 1), b_alk, Ea_alk, Vx);
+        G(i, j, 2)= NV(T, L(i, j, 1), b_alk, Ea_alk, Vx);
     end
 end
 
@@ -52,21 +52,21 @@ for i = 3:2:xm2
     for j = 1:4:ymax
         L(i, j, 1) = normrnd(lm, ls);
         if(L(i, j, 1) <= 0)
-            L(i, j, 2) = 0;
-            L(i, j, 1) = 0;
+            L(i, j, 2) = 1;
+            L(i, j, 1) = 1;
         end
         if (L(i, j, 1) <= l2 && L(i, j, 1) >= lmin)
-            L(i, j, 2) = G_Value;
-            G_ex(i, j, 1)= NOVG(T, Ea_ptc, Vx, L(i, j, 2));
-            G_ex(i, j, 2)= NOVG(T, Ea_ptc, Vx, L(i, j, 2));
+            L(i, j, 2) = l_ptc;
+            G_ex(i, j, 1)= NOVG(T, L(i, j, 2), b_ptc, Ea_ptc, Vx);
+            G_ex(i, j, 2)= NOVG(T, L(i, j, 2), b_ptc, Ea_ptc, Vx);
         else
-            L(i, j,2) = exp(-b1*L(i,j,1));
-            G_ex(i, j, 1)= NOVG(T, Ea_alk, Vx, L(i, j, 2));
-            G_ex(i, j, 2)= NOVG(T, Ea_alk, Vx, L(i, j, 2));
+            L(i, j, 2) = L(i, j, 1);
+            G_ex(i, j, 1)= NOVG(T, L(i, j, 2), b_alk, Ea_alk, Vx);
+            G_ex(i, j, 2)= NOVG(T, L(i, j, 2), b_alk, Ea_alk, Vx);
         end
         
-        G(i, j, 1)= NOV(T, L(i, j, 1), Ea_alk, Vx);
-        G(i, j, 2)= NOV(T, L(i, j, 1), Ea_alk, Vx);
+        G(i, j, 1)= NOV(T, L(i, j, 1), b_alk, Ea_alk, Vx);
+        G(i, j, 2)= NOV(T, L(i, j, 1), b_alk, Ea_alk, Vx);
     end
 end
 
@@ -75,22 +75,22 @@ for i = 2:2:xm1
         L(i, j, 1) = normrnd(lm, ls);
         
         if(L(i, j, 1) <= 0)
-            L(i, j, 1) = 0;
-            L(i, j ,2) = 0;
+            L(i, j, 1) = 1;
+            L(i, j ,2) = 1;
         end
         
         if (L(i, j, 1) <= l2 && L(i, j, 1) >= lmin)
-            L(i, j, 2) = G_Value;
-            G_ex(i, j, 1)= NOVG(T, Ea_ptc, Vx, L(i, j, 2));
-            G_ex(i, j, 2)= NOVG(T, Ea_ptc, Vx, L(i, j, 2));
+            L(i, j, 2) = l_ptc;
+            G_ex(i, j, 1)= NOVG(T, L(i, j, 2), b_ptc, Ea_ptc, Vx);
+            G_ex(i, j, 2)= NOVG(T, L(i, j, 2), b_ptc, Ea_ptc, Vx);
         else
-            L(i, j, 2) = exp(-b1*L(i, j, 1));
-            G_ex(i, j, 1)= NOVG(T, Ea_alk, Vx, L(i, j, 2));
-            G_ex(i, j, 2)= NOVG(T, Ea_alk, Vx, L(i, j, 2));
+            L(i, j, 2) = L(i, j, 1);
+            G_ex(i, j, 1)= NOVG(T, L(i, j, 2), b_alk, Ea_alk, Vx);
+            G_ex(i, j, 2)= NOVG(T, L(i, j, 2), b_alk, Ea_alk, Vx);
         end
         
-        G(i, j, 1)= NOV(T, L(i, j, 1), Ea_alk, Vx);
-        G(i, j, 2)= NOV(T, L(i, j, 1), Ea_alk, Vx);
+        G(i, j, 1)= NOV(T, L(i, j, 1), b_alk, Ea_alk, Vx);
+        G(i, j, 2)= NOV(T, L(i, j, 1), b_alk, Ea_alk, Vx);
     end
 end
 
