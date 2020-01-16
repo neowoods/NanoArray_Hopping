@@ -1,4 +1,4 @@
-function [na, L_Ex, L_O, Sme_ex, Hme_ex, SmeStd_ex, HmeStd_ex, C_ex, G_ex, Sme, Hme, SmeStd, HmeStd, C, G] = Randl_Ex(h1, T, lm, l2, lmin, ls, l_ptc, b_alk, b_ptc, Ea_alk, Ea_ptc,Vx,Tr)
+function [na, L_Ex, L_O, Sme_ex, Hme_ex, SmeStd_ex, HmeStd_ex, C_ex, G_ex, Sme, Hme, SmeStd, HmeStd, C, G] = Randl_parfor_Ex(h1, T, lm, l2, lmin, ls, l_ptc, b_alk, b_ptc, Ea_alk, Ea_ptc,Vx,Tr)
 %% Initial Variables
 % h1 is number of hexagon rows there are
 H = h1*3^(1/2); % H is the hieght of the grid
@@ -94,7 +94,7 @@ end
 
 
 %% Main Loop for exchanged ligand
-for t = 1:Tr % Tr is the number electron trials
+parfor (t = 1:Tr, 16) % Tr is the number electron trials
     xi = 2*round(1 + w*rand); % xi is the randomized initial x position
     yi = 1; % yi is the initial y position
     s = 0; % s is total hop attempts
@@ -287,7 +287,7 @@ HmeStd_ex =std(HN_ex);
 
 
 %% Main Loop for no exchanged NanoArray
-for t = 1:Tr % Tr is the number electron trials
+parfor (t = 1:Tr, 16) % Tr is the number electron trials
     h = 0;
     s = 0; % s is total hop attempts
     xi = 2*round(1 + w*rand); % xi is the randomized initial x position

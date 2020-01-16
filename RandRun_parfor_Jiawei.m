@@ -61,9 +61,9 @@ Ea_ptc=0.0266;
 
 %% Main Loop
 
-for ngrd=1:grids
+parfor ngrd=1:grids
     for j = 1:5
-         [na, Ligand_Ex, Ligand, SmeGG(ngrd,j),HmeGG(ngrd,j), SmeGGStd(ngrd,j), HmeGGStd(ngrd,j), Matrix_Ex, G_Ex,SmeG(ngrd,j),HmeG(ngrd,j), SmeGStd(ngrd,j), HmeGStd(ngrd,j), Matrix, G] = Randl_Ex(NPgridrows, 298, LM(j), l2_ptcdi, lmin_ptcdi, LS(j), lp, b_alk, b_ptc, Ea_alk, Ea_ptc, Vx, Trials);
+         [na, Ligand_Ex, Ligand, SmeGG(ngrd,j),HmeGG(ngrd,j), SmeGGStd(ngrd,j), HmeGGStd(ngrd,j), Matrix_Ex, G_Ex,SmeG(ngrd,j),HmeG(ngrd,j), SmeGStd(ngrd,j), HmeGStd(ngrd,j), Matrix, G] = Randl_parfor_Ex(NPgridrows, 298, LM(j), l2_ptcdi, lmin_ptcdi, LS(j), lp, b_alk, b_ptc, Ea_alk, Ea_ptc, Vx, Trials);
 
          for x = 1: (xm1)
                 for y = 1: (ymax)
