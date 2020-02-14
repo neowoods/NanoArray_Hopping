@@ -27,7 +27,7 @@ G_ex = zeros(xm1, ymax, 2);
 for i = 1:xm2
     for j = 2:2:ymax
         L(i, j, 1) = normrnd(lm, ls);
-        if(L(i, j, 1) <= 0)
+        if(L(i, j, 1) <= 1)
             L(i, j, 2) = 1;
             L(i, j, 1) = 1;
         end
@@ -49,7 +49,7 @@ end
 for i = 3:2:xm2
     for j = 1:4:ymax
         L(i, j, 1) = normrnd(lm, ls);
-        if(L(i, j, 1) <= 0)
+        if(L(i, j, 1) <= 1)
             L(i, j, 2) = 1;
             L(i, j, 1) = 1;
         end
@@ -72,7 +72,7 @@ for i = 2:2:xm1
     for j = 3:4:ymax
         L(i, j, 1) = normrnd(lm, ls);
         
-        if(L(i, j, 1) <= 0)
+        if(L(i, j, 1) <= 1)
             L(i, j, 1) = 1;
             L(i, j ,2) = 1;
         end

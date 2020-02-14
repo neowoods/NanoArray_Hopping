@@ -3,7 +3,7 @@ clear
 
 for zztop=1:1 
 %% Initial Variables
-Vx = 0;
+Vx = 0.41;
 lengthfactor = 0.54;
 
 lff = lengthfactor;
@@ -15,14 +15,14 @@ LS(4)=0.8*LS(4);%LS =1.6568    2.1018    1.9624    1.7999    2.6544
 
 l2_ptcdi = lengthfactor*25.5;
 lmin_ptcdi = lengthfactor*17;
-lp = lengthfactor*10.1;
+l_ptc = lengthfactor*10.1;
 
 b_alk = 1.47; %npArrayExperimental value      %/Angstrom alkane
 b_ptc = 0.99; %npArrayExperimental value      %/Angstrom ptcdi
 
 Vxmin = 18;
 Vstep = 30;
-Trials = 64;
+Trials = 128;
 NPgridrows = 8;
 grids = 1; %how many grids to generate
 
@@ -63,7 +63,7 @@ Ea_ptc=0.0266;
 
 for ngrd=1:grids
     for j = 1:5
-         [na, Ligand_Ex, Ligand, SmeGG(ngrd,j),HmeGG(ngrd,j), SmeGGStd(ngrd,j), HmeGGStd(ngrd,j), Matrix_Ex, G_Ex,SmeG(ngrd,j),HmeG(ngrd,j), SmeGStd(ngrd,j), HmeGStd(ngrd,j), Matrix, G] = Randl_Ex(NPgridrows, 298, LM(j), l2_ptcdi, lmin_ptcdi, LS(j), lp, b_alk, b_ptc, Ea_alk, Ea_ptc, Vx, Trials);
+         [na, Ligand_Ex, Ligand, SmeGG(ngrd,j),HmeGG(ngrd,j), SmeGGStd(ngrd,j), HmeGGStd(ngrd,j), Matrix_Ex, G_Ex,SmeG(ngrd,j),HmeG(ngrd,j), SmeGStd(ngrd,j), HmeGStd(ngrd,j), Matrix, G] = Randl_Ex(NPgridrows, 298, LM(j), l2_ptcdi, lmin_ptcdi, LS(j), l_ptc, b_alk, b_ptc, Ea_alk, Ea_ptc, Vx, Trials);
 
          for x = 1: (xm1)
                 for y = 1: (ymax)
