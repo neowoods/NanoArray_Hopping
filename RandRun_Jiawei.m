@@ -3,7 +3,7 @@ clear
 
 for zztop=1:1 
 %% Initial Variables
-Vx = 0.41;
+Vx = 0;
 lengthfactor = 0.54;
 
 lff = lengthfactor;
@@ -22,9 +22,9 @@ b_ptc = 0.99; %npArrayExperimental value      %/Angstrom ptcdi
 
 Vxmin = 18;
 Vstep = 30;
-Trials = 128;
+Trials = 64;
 NPgridrows = 8;
-grids = 16; %how many grids to generate
+grids = 1; %how many grids to generate
 
 %% Initial Variables for Nparray
 % h1 is number of hexagon rows there are

@@ -22,7 +22,7 @@ b_ptc = 0.99; %npArrayExperimental value      %/Angstrom ptcdi
 
 Vxmin = 18;
 Vstep = 30;
-Trials = 128;
+Trials = 512;
 NPgridrows = 8;
 grids = 16; %how many grids to generate
 
